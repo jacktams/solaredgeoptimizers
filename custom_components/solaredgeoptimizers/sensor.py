@@ -228,7 +228,9 @@ class SolarEdgeOptimizersSensor(CoordinatorEntity, SensorEntity):
         elif self._sensor_type is SENSOR_TYPE_ENERGY:
             self._attr_native_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
             self._attr_device_class = SensorDeviceClass.ENERGY
+            self._attr_state_class = SensorStateClass.TOTAL_INCREASING
         elif self._sensor_type is SENSOR_TYPE_LASTMEASUREMENT:
+            self._attr_state_class = None
             self._attr_device_class = SensorDeviceClass.DATE
 
     @property
@@ -285,7 +287,7 @@ class SolarEdgeOptimizersSensor(CoordinatorEntity, SensorEntity):
             # Set the value to zero. (BUT NOT FOR LIFETIME ENERGY)
             if (
                 not self._sensor_type is SENSOR_TYPE_ENERGY
-                or self._sensor_type is SENSOR_TYPE_LASTMEASUREMENT
+                # or self._sensor_type is SENSOR_TYPE_LASTMEASUREMENT
             ):
                 self._attr_native_value = 0
 
