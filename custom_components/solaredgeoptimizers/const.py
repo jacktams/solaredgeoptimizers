@@ -10,7 +10,7 @@ PANEEL_DATA = "paneel_data"
 
 LOGGER = logging.getLogger(__package__)
 
-UPDATE_DELAY = timedelta(minutes=15)
+UPDATE_DELAY = timedelta(minutes=10)
 
 SENSOR_TYPE_CURRENT = "Current"
 SENSOR_TYPE_OPT_VOLTAGE = "Optimizer_voltage"

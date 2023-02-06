@@ -140,37 +140,7 @@ class MyCoordinator(DataUpdateCoordinator):
                 data = await self.hass.async_add_executor_job(
                     self.my_api.requestAllData
                 )
-
-                now = datetime.now()
-                local_now = now.astimezone()
-                local_tz = local_now.tzinfo
-                local_tzname = local_tz.tzname(local_now)
-
-                # we need to check if we indeed need to update it all...
-                update = False
-                # timetocheck = datetime.now() - timedelta(hours=0, minutes=10)
-
-                timetocheck = datetime.now(pytz.timezone(local_tzname)) - timedelta(
-                    hours=1, minutes=00
-                )
-
-                for optimizer in data:
-                    _LOGGER.debug(
-                        "Checking time: %s | Versus last measerument: %s",
-                        timetocheck,
-                        optimizer.lastmeasurement,
-                    )
-                    if optimizer.lastmeasurement > timetocheck:
-                        update = True
-                        break
-
-                if update or self.first_boot:
-                    _LOGGER.debug("We voeren nieuwe gegevens door")
-                    self.first_boot = False
-                    return data
-                else:
-                    _LOGGER.debug("Geen nieuwe gegevens door te voeren")
-                    return None
+                return data
 
         except Exception as err:
             raise UpdateFailed(err)
@@ -283,12 +253,5 @@ class SolarEdgeOptimizersSensor(CoordinatorEntity, SensorEntity):
                     elif self._sensor_type is SENSOR_TYPE_LASTMEASUREMENT:
                         self._attr_native_value = item.lastmeasurement
                         break
-        else:
-            # Set the value to zero. (BUT NOT FOR LIFETIME ENERGY)
-            if (
-                not self._sensor_type is SENSOR_TYPE_ENERGY
-                # or self._sensor_type is SENSOR_TYPE_LASTMEASUREMENT
-            ):
-                self._attr_native_value = 0
 
         self.async_write_ha_state()
